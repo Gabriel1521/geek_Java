@@ -2,4 +2,4 @@
 
 HttpClient send request  
 
-然后NettyServer接收到request后，通过handler进行处理，filter加在inbound和outbound的handler里面，对header进行相应处理，再通过outbound返回response。  
+然后NettyServer接收到request后，传给inbound handler，再调用outbound handler和request filter，对header进行相应处理，再返回response。  
