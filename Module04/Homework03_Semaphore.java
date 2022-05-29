@@ -23,6 +23,7 @@ public class Homework03 {
         // 在这里创建一个线程或线程池，
         // 异步执行 下面方法
         List<Integer> arr = new ArrayList<>(36);
+        List<Integer> arr_switch = new ArrayList<>(36);
 
         int N = 36;
 
@@ -30,7 +31,8 @@ public class Homework03 {
 
         for (int i=0;i<N;i++){
             arr.add(i);
-            new Worker(i, semaphore, arr, start).start();
+            arr_switch.add(0);
+            new Worker(i, semaphore, arr, arr_switch, start).start();
 
         }
 
@@ -46,27 +48,37 @@ public class Homework03 {
         // 然后退出main线程
     }
     
-    private static int sum(List<Integer> arr) {
-        return fibo(36, arr);
+    private static int sum() {
+        return fibo_1(36);
     }
     
-    private static int fibo(int a, List<Integer> arr) {
-        if (a < 2)
+    private static int fibo(int a, List<Integer> arr, List<Integer> arr_switch) {
+        if (a < 2) {
             return 1;
+        }
         int arr_size = arr.size();
-        if (a > 2 & a-2 < arr_size-2){
-            int res2 = arr.get(a-2-1);
-            if (a-1 < arr_size-1){
-                int res1 = arr.get(a-1-1);
+        if (a > 2) {
+            int s1 = arr_switch.get(a - 1 - 1);
+            int s2 = arr_switch.get(a - 2 - 1);
+            if (s1 == 1 && s2 == 1) {
+                int res1 = arr.get(a - 1 - 1);
+                int res2 = arr.get(a - 2 - 1);
                 return res1 + res2;
+            } else if (s1 == 1 && s2 == 0) {
+                int res1 = arr.get(a - 1 - 1);
+                return res1 + fibo(a - 2, arr, arr_switch);
+            } else if (s1 == 0 && s2 == 1) {
+                int res2 = arr.get(a - 2 - 1);
+                return fibo(a - 1, arr, arr_switch) + res2;
             }
             else{
-                return (a-1)+res2;
+                return fibo(a-1,arr, arr_switch) + fibo(a-2,arr, arr_switch);
             }
         }
         else{
-            return fibo(a-1,arr) + fibo(a-2,arr);
+            return fibo(a-1,arr, arr_switch) + fibo(a-2,arr, arr_switch);
         }
+
     }
 
     private static int fibo_1(int a) {
@@ -80,12 +92,14 @@ public class Homework03 {
         private Semaphore semaphore;
         private List<Integer> arr;
         private long start;
+        private List<Integer> arr_switch;
 
-        public Worker(int num, Semaphore semaphore, List<Integer> arr, long start) {
+        public Worker(int num, Semaphore semaphore, List<Integer> arr, List<Integer> arr_swtich, long start) {
             this.num = num;
             this.semaphore = semaphore;
             this.arr = arr;
             this.start = start;
+            this.arr_switch = arr_swtich;
         }
 
         @Override
@@ -93,10 +107,11 @@ public class Homework03 {
             try {
                 semaphore.acquire();  // 在子线程里控制资源占用
                 System.out.println("Current i " + this.num + "占用一个机器在生产...");
-                //int result = fibo(this.num+1, arr);
-                int result = fibo_1(this.num+1);
+                int result = fibo(this.num+1, arr, arr_switch);
+                //int result = fibo_1(this.num+1);
                 System.out.println(arr.size());
                 arr.set(this.num,result);
+                arr_switch.set(this.num,1);
                 System.out.println("result "+result);
                 System.out.println("Current i " + this.num + "释放出机器");
 
@@ -114,3 +129,4 @@ public class Homework03 {
         }
     }
 }
+
