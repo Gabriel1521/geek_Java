@@ -5,8 +5,7 @@
 
 使用countdownlatch
 
-
-
+设了countdown为36个，起了36个线程，最后await主进程等待所有线程结束返回结果。
 
 
 使用semaphore
