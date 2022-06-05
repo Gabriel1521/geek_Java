@@ -1,6 +1,6 @@
 package module05.spring02;
 
-import io.kimmking.spring01.Student;
+import module05.spring01.Student;
 import lombok.Data;
 
 import java.util.List;
