@@ -7,6 +7,8 @@ publish comments java
 
 https://www.csdn.net/tags/MtTaMg5sMzA0MzUxLWJsb2cO0O0O.html
 
+http://t.zoukankan.com/floay-p-6708186.html
+
 
 
 8.（必做）基于 Redis 封装分布式数据操作：
