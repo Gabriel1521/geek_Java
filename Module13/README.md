@@ -22,4 +22,42 @@ properties.put("bootstrap.servers", "localhost:9092,localhost:9093,localhost:909
 
 6.（必做）思考和设计自定义 MQ 第二个版本或第三个版本，写代码实现其中至少一个功能点，把设计思路和实现代码，提交到 GitHub。
 
+![Pasted Graphic 2](https://user-images.githubusercontent.com/10376496/182020933-6a89b928-5d48-4116-bcfd-626e1ace911e.jpg)
+
+
+
+通过REST API接口完成创建topic和发送和读取消息服务
+
+
+创建topic
+
+POST /create？topic=“topic-1”
+
+Response 200 Topic create successfully.
+
+Response 400 Topic create failed.
+
+
+发送消息
+
+POST /topic/topic-1?message=“This is a message to topic-1.”
+
+Response 200 Message sent successfully.
+
+Response 400 Message send failed.
+
+
+拉取消息
+
+GET /topic/topic-1?offset=“0”
+
+Response 200 Message : “This is a message to topic-1”
+
+Response 400 No message available.
+
+
+
+
+
+
 
