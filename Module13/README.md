@@ -4,10 +4,12 @@
 配置好并启动3节点的kafka集群
 
 配置好节点的properties文件
+  
 ![Pasted Graphic](https://user-images.githubusercontent.com/10376496/182018599-7a08fe5b-d297-45b6-8402-50aa2af1dd1c.jpg)
 
 
 然后启动3个节点
+  
 ![Pasted Graphic 1](https://user-images.githubusercontent.com/10376496/182018605-469f43cb-eecd-4372-b7fa-b95d49292e3e.jpg)
 
 
