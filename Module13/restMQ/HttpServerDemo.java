@@ -14,6 +14,8 @@ public class HttpServerDemo {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(8888), 0);
         //创建上下文监听,拦截包含/test的请求*
         httpServer.createContext("/create", new TopicHttpHandler());
+        httpServer.createContext("/publishmessage", new PublishMessageHandler());
+        httpServer.createContext("/publishmessage", new PollMessageHandler());
         httpServer.start();
     }
 }
