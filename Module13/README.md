@@ -38,6 +38,11 @@ Response 200 Topic create successfully.
 Response 400 Topic create failed.
 
 
+创建一个map，map的key设置为topic，value为一个array
+
+每次通过topic_name和offset从array中读取消息
+
+
 发送消息
 
 POST /topic/topic-1?message=“This is a message to topic-1.”
