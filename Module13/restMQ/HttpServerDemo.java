@@ -15,7 +15,7 @@ public class HttpServerDemo {
         //创建上下文监听,拦截包含/test的请求*
         httpServer.createContext("/create", new TopicHttpHandler());
         httpServer.createContext("/publishmessage", new PublishMessageHandler());
-        httpServer.createContext("/publishmessage", new PollMessageHandler());
+        httpServer.createContext("/pollmessage", new PollMessageHandler());
         httpServer.start();
     }
 }
