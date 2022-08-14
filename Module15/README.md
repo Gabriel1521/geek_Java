@@ -138,7 +138,60 @@ NIO：NIO是一种同步非阻塞IO, 基于Reactor模型来实现的。
 
 * 并发编程
 
+![Pasted Graphic 56](https://user-images.githubusercontent.com/10376496/184535029-f4800e54-feee-4756-9627-65aa55fd8fba.jpg)
 
+![Pasted Graphic 57](https://user-images.githubusercontent.com/10376496/184535035-f98fe439-33eb-473d-899a-f6710a2c5aa3.jpg)
+
+![Pasted Graphic 58](https://user-images.githubusercontent.com/10376496/184535037-03d8ccd2-f8ac-4f32-8273-372ead4a5c73.jpg)
+
+![Pasted Graphic 59](https://user-images.githubusercontent.com/10376496/184535048-9f46cdb8-c937-4771-8c64-b1309f13d43b.jpg)
+
+![Pasted Graphic 60](https://user-images.githubusercontent.com/10376496/184535042-dbd481d0-0425-413e-b262-eb7b59d362a1.jpg)
+
+![Pasted Graphic 61](https://user-images.githubusercontent.com/10376496/184535055-160b62b1-2042-4174-b44e-7b2a7956726e.jpg)
+
+![Pasted Graphic 62](https://user-images.githubusercontent.com/10376496/184535069-d0fbd991-a1c8-474b-85fc-a022f746bb29.jpg)
+
+![Pasted Graphic 63](https://user-images.githubusercontent.com/10376496/184535070-17bd0011-a091-4109-a35e-2e71d6c8ce7d.jpg)
+
+
+![Pasted Graphic 52](https://user-images.githubusercontent.com/10376496/184535076-9178d563-157d-450e-907a-b6f1f3eb9389.jpg)
+
+![Pasted Graphic 53](https://user-images.githubusercontent.com/10376496/184535081-35d7e63a-2cc8-4eaa-8176-7cda1fde54ea.jpg)
+
+![Pasted Graphic 54](https://user-images.githubusercontent.com/10376496/184535086-b9c99d32-bbfe-483e-99c4-39024d1b7705.jpg)
+
+![Pasted Graphic 55](https://user-images.githubusercontent.com/10376496/184535091-56c5545a-3321-4bd5-aaf3-30c0709e0605.jpg)
+
+![Pasted Graphic 64](https://user-images.githubusercontent.com/10376496/184535097-43156ff8-a43f-40d9-a955-24ab547bfb39.jpg)
+
+![Pasted Graphic 66](https://user-images.githubusercontent.com/10376496/184535101-9879b76e-e91a-4ccc-9fc2-f260293df3c3.jpg)
+
+![Pasted Graphic 65](https://user-images.githubusercontent.com/10376496/184535106-74cf03f1-0e99-4eee-b624-f25f4c6c65dd.jpg)
+
+
+https://www.cnblogs.com/paddix/p/5374810.html
+
+https://baijiahao.baidu.com/s?id=1708721597435904336&wfr=spider&for=pc
+
+![Pasted Graphic 67](https://user-images.githubusercontent.com/10376496/184535119-92f21431-3089-4460-8c1c-e14585e49262.jpg)
+
+![Pasted Graphic 68](https://user-images.githubusercontent.com/10376496/184535124-bcf9f246-a02f-4ca5-bd46-800c475bde0d.jpg)
+
+
+java.util.concurrency 
+锁机制类 Locks : Lock, Condition, ReentrantLock, ReadWriteLock,LockSupport 
+原子操作类 Atomic : AtomicInteger, AtomicLong, LongAdder 
+线程池相关类 Executor : Future, Callable, Executor, ExecutorService 
+信号量三组工具类 Tools : CountDownLatch, CyclicBarrier, Semaphore 
+并发集合类 Collections : CopyOnWriteArrayList, ConcurrentMap
+
+
+* Spring 和 ORM 等框架
+
+
+
+* MySQL 数据库和 SQL
 
 
 
