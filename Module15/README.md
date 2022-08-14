@@ -268,6 +268,9 @@ Spring框架主要构成部分包括AOP，BEAN和ORM。 AOP类似于在pipeline�
 
 * 分库分表
 
+
+分库分表主要可以做垂直拆分和水平拆分，垂直拆分是根据业务进行拆分，对系统的影响较大，按高内举松耦合的方法将同类业务聚合一起进行拆分。水平拆分则是以一定规则例如将ID%2将数据分拆到两个数据库中，对系统影响较小，而且可以平均把流量分配到不同数据库。课程中使用shardingsphere-proxy在代码中进行拆分。
+
 ![Pasted Graphic 109](https://user-images.githubusercontent.com/10376496/184536642-22a739dc-6ad8-4ff7-9605-f669a25abc7b.jpg)
 
 ![Pasted Graphic 110](https://user-images.githubusercontent.com/10376496/184536645-53f918b6-27e9-43a0-9b03-2d40a9722a26.jpg)
