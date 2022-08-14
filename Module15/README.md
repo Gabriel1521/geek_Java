@@ -133,6 +133,7 @@ NIO：NIO是一种同步非阻塞IO, 基于Reactor模型来实现的。
 
 ![Pasted Graphic 48](https://user-images.githubusercontent.com/10376496/184534424-6ca17b57-85ae-44f4-806c-40665ad5ab8d.jpg)
 
+![Pasted Graphic 51](https://user-images.githubusercontent.com/10376496/184534505-d7d65079-061b-4581-b83b-653f9738f08e.jpg)
 
 
 * 并发编程
