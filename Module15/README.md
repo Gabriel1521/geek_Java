@@ -296,9 +296,217 @@ Spring框架主要构成部分包括AOP，BEAN和ORM。 AOP类似于在pipeline�
 * RPC 和微服务
 
 
+RPC 是远程过程调用(Remote Procedure Call)的缩写形式。 
+简单来说，就是“像调用本地方法一样调用远程方法”。
+UserService service = new UserService(); User user = service.findById(1); 
+UserService service = Rpcfx.create(UserService.class, url); User user = service.findById(1); 
+
+![Pasted Graphic 120](https://user-images.githubusercontent.com/10376496/184538150-027cf716-0ac3-416b-9f75-0cb63f834f53.jpg)
+
+![Pasted Graphic 121](https://user-images.githubusercontent.com/10376496/184538153-5b8ed2c2-609b-43af-8c55-d2559459dd69.jpg)
+
+RPC 原理--1.设计 
+
+共享:POJO 实体类定义，接口定义。 
+REST/PB下，真的不需要嘛?另一种选择:WSDL/WADL/IDL 远程->服务提供者，本地->服务消费者。 
+------------ rpcfx 里的 api 子项目 
+
+
+RPC 原理--2.代理 RPC 是基于接口的远程服务调用。 
+Java 下，代理可以选择动态代理，或者 AOP 实现 
+------------ rpcfx 里的 默认使用动态代理 
+
+
+RPC 原理--3.序列化 序列化和反序列化的选择: 
+1、语言原生的序列化，RMI，Remoting 2、二进制平台无关，Hessian，avro，kyro，fst 等 3、文本，JSON、XML 等 
+------------ rpcfx 里的默认使用 JSON 
+
+RPC 原理--4.网络传输 最常见的传输方式: 
+- TCP/SSL - HTTP/HTTPS ------------ rpcfx 里的默认使用 HTTP 
+
+RPC 原理--5.查找实现类 通过接口查找具体的业务服务实现。 
+------------ rpcfx 里的默认使用 Spring getBean 
+
+![Pasted Graphic 122](https://user-images.githubusercontent.com/10376496/184538161-501636aa-e2d2-49c0-bffa-cae035e2557d.jpg)
+
+![Pasted Graphic 123](https://user-images.githubusercontent.com/10376496/184538163-634cdc7a-0e7a-4db4-98c0-e946122c47be.jpg)
+
+![Pasted Graphic 124](https://user-images.githubusercontent.com/10376496/184538167-c13bfc2b-1d07-4f8d-97e3-c91ffbedae3c.jpg)
+
+![Pasted Graphic 125](https://user-images.githubusercontent.com/10376496/184538170-5d8302df-800c-4633-98d0-360569738f59.jpg)
+
+![Pasted Graphic 126](https://user-images.githubusercontent.com/10376496/184538175-4958ce33-79d1-4176-9ebd-42e025e3fe54.jpg)
+
+整体架构 
+1. config 配置层:对外配置接口，以 ServiceConfig, ReferenceConfig 为中心，可以直接初始化配置类， 也可以通过 spring 解析配置生成配置类 
+2. proxy 服务代理层:服务接口透明代理，生成服务的客户端 Stub 和服务器端 Skeleton, 以 ServiceProxy 为中心，扩展接口为 ProxyFactory 
+3.registry 注册中心层:封装服务地址的注册与发现，以服务 URL 为中心，扩展接口为 RegistryFactory, Registry, RegistryService 
+4. cluster 路由层:封装多个提供者的路由及负载均衡，并桥接注册中心，以 Invoker 为中心，扩展接口为 Cluster，Directory，Router，LoadBalance 
+5. monitor 监控层:RPC 调用次数和调用时间监控，以 Statistics 为中心，扩展接口为 MonitorFactory, Monitor, MonitorService 
+6. protocol 远程调用层:封装 RPC 调用，以 Invocation，Result 为中心，扩展接口为 Protocol， Invoker，Exporter 
+7. exchange 信息交换层:封装请求响应模式，同步转异步，以 Request，Response 为中心，扩展接口为 Exchanger，ExchangeChannel，ExchangeClient，ExchangeServer 
+8. transport 网络传输层:抽象 mina 和 netty 为统一接口，以 Message 为中心，扩展接口为 Channel， Transporter，Client，Server，Codec 
+9. serialize 数据序列化层:可复用的一些工具，扩展接口为 Serialization，ObjectInput， ObjectOutput， ThreadPool 
+
+![Pasted Graphic 127](https://user-images.githubusercontent.com/10376496/184538187-d2df5e6f-1075-4ef8-b8c9-eadb36aa49ff.jpg)
+
+![Pasted Graphic 130](https://user-images.githubusercontent.com/10376496/184538194-4fa89fd8-75e9-47a1-9b54-9e8f655ec783.jpg)
+
+![Pasted Graphic 129](https://user-images.githubusercontent.com/10376496/184538197-a18a7fbd-7b38-44d2-8e5f-64e14c681fab.jpg)
+
+![Pasted Graphic 128](https://user-images.githubusercontent.com/10376496/184538203-d1160e0c-4bcf-4eca-a443-8717a91681c5.jpg)
+
+![Pasted Graphic 131](https://user-images.githubusercontent.com/10376496/184538206-67a75985-d6a5-41c4-bc27-eada8dcc3244.jpg)
+
+![Pasted Graphic 132](https://user-images.githubusercontent.com/10376496/184538208-9b9f2d1a-9848-4f0f-8179-fffee3133795.jpg)
+
+配置中心(ConfigCenter):管理系统需要的配置参数信息 
+注册中心(RegistryCenter):管理系统的服务注册、提供发现和协调能力 
+元数据中心(MetadataCenter):管理各个节点使用的元数据信息 
+相同点:都需要保存和读取数据/状态，变更通知 不同点:配置是全局非业务参数，注册中心是运行期临时状态，元数据是业务模型 
+
+服务注册 
+服务提供者启动时， - 将自己注册到注册中心(比如 zk 实现)的临时节点。 
+- 停止或者宕机时，临时节点消失 
+
+注册的数据格式 
+- 节点 key，代表当前服务(或者服务+版本) 
+- 多个子节点，每一个为一个提供者的描述信息 
+
+
+服务发现 
+服务消费者启动时， - 从注册中心代表服务的主节点拿到多个代表提供者的临时节点列表，并本地缓存(why???)。 - 根据 router 和 loadbalance 算法从其中的某一个执行调用。 - 如果可用的提供者集合发生变化时，注册中心通知消费者刷新本地缓存的列表。 例如 zk 可以使用 curator 作为客户端操作。 
+
+服务集群 
+多个服务提供者都提供了同样的服务，这时应该如何处理? >> 大家回忆一下，我们提到了多少种处理方式。 对于完全相同能力的多个服务，我们希望他们能一切协同工作，分摊处理流量。 
+- 路由 - 负载均衡 
+
+服务路由(Service Route) 跟网关的路由一样 
+1、比如基于 IP 段的过滤， 2、再比如服务都带上 tag，用 tag 匹配这次调用范围。 
+
+
+服务负载均衡(Service LoadBalance) 跟 Nginx 的负载均衡一样。 
+多个不同策略，原理不同，目的基本一致(尽量均匀): 
+1、Random(带权重)== dubbo 默认的策略 
+2、RoundRobin(轮询) 3、LeastActive(快的多给) 
+4、ConsistentHashLoadBalance(同样参数请求到一个提供者 
+
+
+服务过滤 
+所有的复杂处理，都可以抽象为管道+过滤器模式(Channel+Filter) 这个机制是一个超级 bug 的存在， 可以用来实现额外的增强处理(类似 AOP)，也可以中断当前处理流程，返回特定数据。
+对比考虑一下，我们 NIO 网关时的 filter，servlet 的 filter 等。 
+
+为什么需要服务流控(Flow Control) 
+稳定性工程: 
+1、我们逐渐意识到一个问题:系统会故障是正常现象，就像人会生病 2、那么在系统出现问题时，直接不服务，还是保持部分服务能力呢? 
+系统的容量有限。
+保持部分服务能力是最佳选择，然后在问题解决后恢复正常状态。
+响应式编程里，这就是所谓的回弹性(Resilient)。 需要流控的本质原因是，输入请求大于处理能力。 
+
+服务流控 
+流控有三个级别: 
+1、限流(内部线程数，外部调用数或数据量) 
+2、服务降级(去掉不必要的业务逻辑，只保留核心逻辑) 
+3、过载保护(系统短时间不提供新的业务处理服务，积压处理完后再恢复输入请求) 
+
+
 
 * 分布式缓存
+
+![Pasted Graphic 133](https://user-images.githubusercontent.com/10376496/184538220-42dd79fb-f278-43b6-b091-d0ec04a11f37.jpg)
+
+![Pasted Graphic 134](https://user-images.githubusercontent.com/10376496/184538226-991f5f7f-669c-4bdc-8b71-23913093188e.jpg)
+
+![Pasted Graphic 135](https://user-images.githubusercontent.com/10376496/184538232-db6512ef-5fa3-4b11-ab26-ffc9770693da.jpg)
+
+
+容量 
+资源有限
+- 缓存数据容量是必须要考虑的问题
+- 思考系统的设计容量、使用容量、峰值，应该是我们做架构设计的一个常识 
+
+
+过期策略 
+- 按FIFO或LRU
+- 按固定时间过期
+- 按业务时间加权:例如3+5x 
+
+![Pasted Graphic 136](https://user-images.githubusercontent.com/10376496/184538260-8c514bfd-f55f-4c21-8e60-c1e4908ac02e.jpg)
+
+![Pasted Graphic 136](https://user-images.githubusercontent.com/10376496/184538293-0e103059-b7d7-4ac3-ae08-6bcce4ce7965.jpg)
+
+
+![Pasted Graphic 136](https://user-images.githubusercontent.com/10376496/184538277-7adf7bfd-0016-468b-8845-2d21376f53c1.jpg)
+
+
+![Pasted Graphic 139](https://user-images.githubusercontent.com/10376496/184538282-e719ab55-437b-4818-be7a-df14674790f2.jpg)
+
+![Pasted Graphic 140](https://user-images.githubusercontent.com/10376496/184538307-d5404abc-01e6-475f-aeab-515639686102.jpg)
+
+![Pasted Graphic 141](https://user-images.githubusercontent.com/10376496/184538310-b97e7dd2-9710-4a2d-981b-b0feea350c7a.jpg)
+
+![Pasted Graphic 142](https://user-images.githubusercontent.com/10376496/184538316-08d3779e-a58d-4a1c-bf0b-68bd1c86eff6.jpg)
+
+![Pasted Graphic 143](https://user-images.githubusercontent.com/10376496/184538321-278d4db3-4801-4f8c-891e-4f72cd44c974.jpg)
+
+![Pasted Graphic 144](https://user-images.githubusercontent.com/10376496/184538323-9f25d630-41f2-4e14-8d84-09dd8eba0d72.jpg)
+
+![Pasted Graphic 145](https://user-images.githubusercontent.com/10376496/184538325-13b7c4f9-398b-4616-b018-c1475c59e8f6.jpg)
+
+![Pasted Graphic 147](https://user-images.githubusercontent.com/10376496/184538329-a10cb68a-65e1-48a2-a522-5f2152caa87e.jpg)
+
+![Pasted Graphic 148](https://user-images.githubusercontent.com/10376496/184538335-c79ac9a9-8d7f-4035-a4d0-b6a475260884.jpg)
+
+![Pasted Graphic 149](https://user-images.githubusercontent.com/10376496/184538338-8287e0ae-0e1d-466e-9b3c-8f40300b1d69.jpg)
+
+![Pasted Graphic 150](https://user-images.githubusercontent.com/10376496/184538339-622f84d4-b273-4968-a866-8ab04b26b1e4.jpg)
+
+![Pasted Graphic 146](https://user-images.githubusercontent.com/10376496/184538341-e11bb9fa-b7c5-41ce-89ac-f43b743b164b.jpg)
+
+
+Redis 的 Java 客户端-Jedis 官方客户端，类似于 JDBC，可以看做是对 redis 命令的包装。 
+基于 BIO，线程不安全，需要配置连接池管理连接。 
+
+![Pasted Graphic 152](https://user-images.githubusercontent.com/10376496/184538346-589532f3-5b96-46d2-9dfa-16890d4a6fe8.jpg)
+
+![Pasted Graphic 151](https://user-images.githubusercontent.com/10376496/184538350-17b097a7-f076-45f1-936a-f0153dd828b0.jpg)
+
+![Pasted Graphic 153](https://user-images.githubusercontent.com/10376496/184538353-268a24ee-40bb-4c6a-847a-167d4219e02e.jpg)
+
 
 
 
 * 分布式消息队列
+
+
+![Pasted Graphic 154](https://user-images.githubusercontent.com/10376496/184538358-29f32dd2-8815-41f2-8d63-725af4fa893f.jpg)
+
+![Pasted Graphic 155](https://user-images.githubusercontent.com/10376496/184538366-8e596329-3748-4272-8f1c-a1f41e21874a.jpg)
+
+MQ 的四大作用 对比其他通信模式，MQ 的优势在于: 
+- 异步通信:异步通信，减少线程等待，特别是处理批量等大事务、耗时操作。
+- 系统解耦:系统不直接调用，降低依赖，特别是不在线也能保持通信最终完成。 
+- 削峰平谷:压力大的时候，缓冲部分请求消息，类似于背压处理。
+- 可靠通信:提供多种消息模式、服务质量、顺序保障等 
+
+
+![Pasted Graphic 156](https://user-images.githubusercontent.com/10376496/184538382-6a96f17d-24b1-46eb-9b54-ab6f072fa19a.jpg)
+
+![Pasted Graphic 157](https://user-images.githubusercontent.com/10376496/184538385-1ff5850c-48c3-4db2-9b40-c81cfd46aa59.jpg)
+
+![Pasted Graphic 158](https://user-images.githubusercontent.com/10376496/184538388-b06419ed-418d-47ca-ad35-69685356395e.jpg)
+
+![Pasted Graphic 159](https://user-images.githubusercontent.com/10376496/184538390-2ab9ade2-b533-4fb7-abf9-e8e9ff6aebbe.jpg)
+
+![Pasted Graphic 160](https://user-images.githubusercontent.com/10376496/184538392-28e0cd0e-5230-4cdc-beb8-79ab82752293.jpg)
+
+![Pasted Graphic 161](https://user-images.githubusercontent.com/10376496/184538400-de1c9d20-5b84-47ee-81d2-db5863c273ec.jpg)
+
+![Pasted Graphic 162](https://user-images.githubusercontent.com/10376496/184538404-f7b2143c-a9f5-4baa-882e-3e876c062b2c.jpg)
+
+![Pasted Graphic 163](https://user-images.githubusercontent.com/10376496/184538405-563bc542-a87c-4cfb-9208-1d973946326a.jpg)
+
+![Pasted Graphic 164](https://user-images.githubusercontent.com/10376496/184538409-cacb18c3-6578-40b7-8258-7eb1b8352106.jpg)
+
+
+
