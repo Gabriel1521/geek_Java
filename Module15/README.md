@@ -193,6 +193,9 @@ java.util.concurrency
 
 * Spring 和 ORM 等框架
 
+
+Spring框架主要构成部分包括AOP，BEAN和ORM。 AOP类似于在pipeline中间增加前后处理过程的filter，Bean可以使用xml生成加载对象，ORM负责object到数据库的连接和映射，包括Hibernate和Mybatis。  
+
 ![Pasted Graphic 72](https://user-images.githubusercontent.com/10376496/184535799-f4932a4f-7843-4050-9c31-e94a0c0bac41.jpg)
 
 ![Pasted Graphic 76](https://user-images.githubusercontent.com/10376496/184535802-b99f0525-0db0-44a8-8b21-c00483f19fd7.jpg)
