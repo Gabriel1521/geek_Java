@@ -268,8 +268,34 @@ Spring框架主要构成部分包括AOP，BEAN和ORM。 AOP类似于在pipeline�
 
 * 分库分表
 
+![Pasted Graphic 109](https://user-images.githubusercontent.com/10376496/184536642-22a739dc-6ad8-4ff7-9605-f669a25abc7b.jpg)
+
+![Pasted Graphic 110](https://user-images.githubusercontent.com/10376496/184536645-53f918b6-27e9-43a0-9b03-2d40a9722a26.jpg)
+
+![Pasted Graphic 111](https://user-images.githubusercontent.com/10376496/184536648-14f54fa0-6faf-493d-aaf5-34abcb93c417.jpg)
+
+![Pasted Graphic 112](https://user-images.githubusercontent.com/10376496/184536652-dafafd1a-4faa-4558-9131-430934bebbf1.jpg)
+
+![Pasted Graphic 113](https://user-images.githubusercontent.com/10376496/184536655-207b6207-dd47-4322-84e4-7d3b7f3371cf.jpg)
+
+![Pasted Graphic 114](https://user-images.githubusercontent.com/10376496/184536658-dc42b341-b7dd-455b-a71f-ee065162fffe.jpg)
+
+![Pasted Graphic 116](https://user-images.githubusercontent.com/10376496/184536659-de6e3d4e-d20d-4cce-9c28-b2aa34dce82e.jpg)
+
+![Pasted Graphic 117](https://user-images.githubusercontent.com/10376496/184536660-cc8e0f5f-28f3-4721-ae21-75eea5ae6674.jpg)
+
+![Pasted Graphic 118](https://user-images.githubusercontent.com/10376496/184536663-0c4e3d63-1704-4e1b-97f0-ef7b2ac94a16.jpg)
+
+![Pasted Graphic 119](https://user-images.githubusercontent.com/10376496/184536667-81154c0a-ea21-4b33-a37c-dc0ed646ba07.jpg)
+
 
 
 * RPC 和微服务
 
 
+
+* 分布式缓存
+
+
+
+* 分布式消息队列
