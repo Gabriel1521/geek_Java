@@ -21,6 +21,85 @@ Module 15
    
 Main Content  
    
+   
+* JVM
+
+
+Java通过将Java的源码文件编译成字节码文件，在JVM上通过类加载器对文件进行加载创建对象实例来完成编译运行。JVM同时负责内存的分配调用，可以内存使用问题可以通过JVM相关分析来Debug。字节码文件运行时会通过JVM创建栈桢来实现内存分配，JVM内存模型部分详细描述了JVM的内存结构包括栈桢内部结构。类加载器分三类，包括启动类、扩展类和应用类加载器，机制有双亲委派以及负责依赖等。JVM调优包括根据使用设置不同的JVM参数与GC策略，诸如G1GC和ZGC等。
+
+* NIO
+
+
+NIO：NIO是一种同步非阻塞IO, 基于Reactor模型来实现的。
+ 其实相当于就是一个线程处理大量的客户端的请求，通过一个线程轮询大量的channel，每次就获取一批有事件的channel，然后对每个请求启动一个线程处理即可。
+ 这里的核心就是非阻塞，就那个selector一个线程就可以不停轮询channel，所有客户端请求都不会阻塞，直接就会进来，大不了就是等待一下排着队而已。
+ 这里面优化BIO的核心就是，一个客户端并不是时时刻刻都有数据进行交互，没有必要死耗着一个线程不放，所以客户端选择了让线程歇一歇，只有客户端有相应的操作的时候才发起通知，创建一个线程来处理请求。
+
+
+* 并发编程
+
+并发编程主要基于多线程，多线程使用thread进行创建，然后会从start到run再到terminate经过不同状态，可在runnable里定义run的过程并根据不同函数改变thread状态并处理中断和异常。面对的问题有多线程对同一数据进行读写导致线程不安全，需要加锁等机制保证读写顺序以及数据一致。可使用线程池创建多线程来完成多任务，主要使用类为java.util.concurrency 并包含如下模块。
+锁机制类 Locks : Lock, Condition, ReentrantLock, ReadWriteLock,LockSupport 
+原子操作类 Atomic : AtomicInteger, AtomicLong, LongAdder 
+线程池相关类 Executor : Future, Callable, Executor, ExecutorService 
+信号量三组工具类 Tools : CountDownLatch, CyclicBarrier, Semaphore 
+并发集合类 Collections : CopyOnWriteArrayList, ConcurrentMap
+
+* Spring 和 ORM 等框架
+
+Spring框架主要构成部分包括AOP，BEAN和ORM。 AOP为面向切面编程类似于在pipeline中间增加前后处理过程的filter，ppt定义为了实现管理和装配，一个自然而然的想法就是，加一个中间层代理(字节码增强)来实现所有对象的托管。
+Bean可以使用xml生成加载对象，ORM负责object到数据库的连接和映射，包括Hibernate和Mybatis。
+MyBatis需要使用映射文件 mapper.xml 定义 map 规则和 SQL，需要定义 mapper/DAO，基于 xml 规则，操作数据库 
+
+
+* MySQL 数据库和 SQL
+
+数据库表结构设计主要使用E-R图，根据数据库设计范式进行设计，尽量避免冗余提高查询效率，包含五个范式以及BC范式。举例3NF:消除传递依赖，消除表中列不依赖主键，而是依赖表中的非主键列的情况，即没有列是与主 键不相关的 。SQL查询语言主要包括DQL，DML以及DDL。数据查询语言(DQL: Data Query Language) 其语句，也称为“数据检索语句”，用以从表中获得数据，确 定数据怎样在应用程序给出。保留字 SELECT 是 DQL(也是所有 SQL)用得最多的动词，其他 DQL 常用的保留字 有 WHERE，ORDER BY，GROUP BY 和 HAVING。这些 DQL 保留字常与其它类型的 SQL 语句一起使用 。数据操作语言(DML:Data Manipulation Language):其语句包括动词 INSERT、UPDATE 和 DELETE。它 们分别用于添加、修改和删除。数据定义语言(DDL):其语句包括动词 CREATE,ALTER 和 DROP；在数据库中创建新表或修改、删除表 (CREAT TABLE 或 DROP TABLE);为表加入索引等。 MySQL配置可以通过- show variables like xxx 查询并且调优。
+
+
+* 分库分表
+
+
+数据库分库分表主要包括垂直拆分，水平拆分以及数据复制。垂直拆分是根据业务进行拆分，对系统的影响较大，按高内举松耦合的方法将同类业务聚合一起进行拆分。水平拆分则是以一定规则例如将ID%2将数据分拆到两个数据库中，对系统影响较小，而且可以平均把流量分配到不同数据库。
+垂直拆分(拆库):将一个数据库，拆分成多个提供不同业务数据处理能力的数据库。
+例如拆分所有订单的数据和产品的数据，变成两个独立的库，这种方式对业务系统有极大的影响，因为数 据结构本身发生了变化，SQL 和关联关系也必随之发生了改变。 垂直拆分(拆表):如果单表数据量过大，还可能需要对单表进行拆分。比如一个 200 列的订单主表，拆分成十几个子表:订单表、订单详情表、订单收件信息表、订单支付表、 订单产品快照表等等。 
+水平拆分(按主键分库分表):水平拆分就是直接对数据进行分片，有分库和分表两个具体方式，但是都只是降低单个节点数据量，但不改变数据本身的结构。这样对业务系统本身的代码逻辑来说，就不需要做特别大的
+改动，甚至可以基于一些中间件做到透明。水平拆分(按时间分库分表):很多时候，我们的数据是有时间属性的，所以自然可以按照时间维度来拆
+分。比如当前数据表和历史数据表，甚至按季度，按月，按天来划分不同的表。数据复制包括主从节点数据复制增加高可用性。
+课程中使用shardingsphere-proxy来进行分库分表操作。
+分布式事务包括XA，以及TCC/AT等。TCC 模式即将每个服务业务操作分为两个阶段，第一个阶段检查并预留相关资源，第二阶段根据所有 服务业务的 Try 状态来操作，如果都成功，则进行 Confirm 操作，如果任意一个 Try 发生错误，则全 部 Cancel。 
+
+* RPC 和微服务
+
+
+RPC 是远程过程调用(Remote Procedure Call)的缩写形式。 
+简单来说，就是“像调用本地方法一样调用远程方法”。
+UserService service = new UserService(); User user = service.findById(1); 
+UserService service = Rpcfx.create(UserService.class, url); User user = service.findById(1); 
+RPC原理主要包括接口定义，代理设置，序列化与反序列化以及网络传输和查找实现类等部分，课程中使用dubbo默认将接口和实现类配置到Spring中。从RPC到分布式服务需要考虑服务的注册发现，负载均衡，路由，熔断限流，重试以及高可用监控等问题。详情可见dubbo的流程图。
+
+
+* 分布式缓存
+
+分布式缓存主要使用redis实现，可以根据读写比以及命中率等指标来衡量引入缓存的效果，可使用Guava和Spring的@Cache配置缓存。缓存常见问题有缓存穿透（大量并发查询不存在的KEY，导致都直接将压力透传到数据库。 ） 、缓存击穿 （某个KEY失效的时候，正好有大量并发请求访问这个KEY。 ）以及缓存雪崩（当某一时刻发生大规模的缓存失效的情况，会有大量的请求进来直接打到数据库，导致数据
+库压力过大升值宕机。）缓存的五种数据结构有string，map，list，set和sorted set。Redis的Java客户端为Jedis。Redis集群高可用可配置主从节点并设置主从复制，并使用sentinel做主从自动切换，使用cluster做分片。
+
+* 分布式消息队列
+
+消息队列主要用于实现如下功能
+- 可以实现异步的消息通信 - 可以简化参与各方的复杂依赖关系 
+- 可以在请求量很大的时候，缓冲一下 
+> 类比线程池里的Queue - 某些情况下能保障消息的可靠性，甚至顺序 
+
+对比其他通信模式，MQ 的优势在于: 
+- 异步通信:异步通信，减少线程等待，特别是处理批量等大事务、耗时操作。 - 系统解耦:系统不直接调用，降低依赖，特别是不在线也能保持通信最终完成。 
+- 削峰平谷:压力大的时候，缓冲部分请求消息，类似于背压处理。 
+- 可靠通信:提供多种消息模式、服务质量、顺序保障等。 
+
+常见的有两种消息模式即点对点:PTP，Point-To-Point 对应于Queue 以及发布订阅:PubSub，Publish-Subscribe 对应于 Topic 。
+消息中间件包括ActiveMQ/RabbitMQ 、Kafka/RocketMQ以及Apache Pulsar 。
+   
+   
 
 * JVM
 
