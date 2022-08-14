@@ -100,3 +100,45 @@ JVM启动参数
 
 
 * NIO
+
+
+NIO：NIO是一种同步非阻塞IO, 基于Reactor模型来实现的。
+ 其实相当于就是一个线程处理大量的客户端的请求，通过一个线程轮询大量的channel，每次就获取一批有事件的channel，然后对每个请求启动一个线程处理即可。
+ 这里的核心就是非阻塞，就那个selector一个线程就可以不停轮询channel，所有客户端请求都不会阻塞，直接就会进来，大不了就是等待一下排着队而已。
+ 这里面优化BIO的核心就是，一个客户端并不是时时刻刻都有数据进行交互，没有必要死耗着一个线程不放，所以客户端选择了让线程歇一歇，只有客户端有相应的操作的时候才发起通知，创建一个线程来处理请求。
+ 
+ ![Pasted Graphic 32](https://user-images.githubusercontent.com/10376496/184534380-5b380059-325e-4cd9-a034-a7bf32768277.jpg)
+
+
+![Pasted Graphic 33](https://user-images.githubusercontent.com/10376496/184534382-f6a35f33-804a-4661-9e49-de5310cab5d9.jpg)
+
+
+![Pasted Graphic 30](https://user-images.githubusercontent.com/10376496/184534388-099a0541-f8ef-401f-9ab2-af54910a940a.jpg)
+
+
+![Pasted Graphic 31](https://user-images.githubusercontent.com/10376496/184534391-4368c381-48d5-40fc-8bb7-39d6b7dff230.jpg)
+
+
+![Pasted Graphic 35](https://user-images.githubusercontent.com/10376496/184534397-5300498a-b46c-4487-ae29-7101c153742e.jpg)
+
+![Pasted Graphic 38](https://user-images.githubusercontent.com/10376496/184534403-af0daedb-fe6f-4399-bbfd-612ddb94d9e7.jpg)
+
+![Pasted Graphic 40](https://user-images.githubusercontent.com/10376496/184534409-0ba502b1-01b8-46c9-81c2-b5f93374227f.jpg)
+
+![Pasted Graphic 42](https://user-images.githubusercontent.com/10376496/184534415-49a1bc73-df8f-49b5-83ce-c5b904604f28.jpg)
+
+![Pasted Graphic 43](https://user-images.githubusercontent.com/10376496/184534417-5e93ca97-f74c-4b90-9375-4712d484e2ad.jpg)
+
+![Pasted Graphic 45](https://user-images.githubusercontent.com/10376496/184534420-590e3820-591e-486b-b24c-603c38ca88c9.jpg)
+
+![Pasted Graphic 48](https://user-images.githubusercontent.com/10376496/184534424-6ca17b57-85ae-44f4-806c-40665ad5ab8d.jpg)
+
+
+
+* 并发编程
+
+
+
+
+
+
